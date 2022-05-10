@@ -1,0 +1,103 @@
+API quản lý machine:
+{
+_id, (unique, auto)
+machineId, (required)
+deviceId, (required)
+sessionId, (required)
+used, (default: 0)
+createdDate, (required)
+lastUsedDate, (default: Date.now)
+note, (default: null)
+tag, (default: null)
+createAt, (auto)
+updateAt, (auto)
+}
+
+1. Add_machine: POST: {url}/api/add_machine
+Example: body {
+  "machineId": "1073f571-8eb6-4dc0-a824-0aca6878c326",
+  "deviceId": "c5f040d8-a11e-41a7-9840-9948c7e04e60",
+  "sessionId": "a15d8329-130c-4645-ae04-58ee35ab8b0f",
+  "used": 0,
+  "createdDate": "11/5/2021",
+  "note": "Volkswagen",
+  "tag": "RU"
+}
+
+2. Update_machine: PATCH: {url}/api/update/:id
+{
+    "note": "Pontiac"
+}
+
+3. Delete_machine: DELETE: {url}/api/delete/:id
+
+4. Get_all_info: GET: {url}/api/delete/all_info?page=1&limit=10
+
+5.Get_info_with_filter: GET: {url}/api/info?page=1&limit=10&tag={TAG}&usedMin={NUMBER}&usedMax={NUMBER}&dateEnd={DATE}&dateStart={DATE}
+(Fields are optional)
+
+Example: http://localhost:5003/api/info?page=1&limit=10&usedMin=1&usedMax=10&tag=CN&dateEnd=11/06/2021Z&dateStart=11/01/2021Z
+
+
+Note: Time: mm/dd/yyyyZ (Z = UTC+0) 
+
+
+API quản lý history machine:
+{
+_id, (unique, auto)
+IP, (required)
+computerName, (required)
+machineId, (required)
+verifySuccess, (boolean, default: null)
+registerSuccess, (boolean, default: null)
+email, (required)
+emailPassword, (required)
+UID, (required)
+password, (required)
+createdDate, (required)
+note, (default: null)
+tag, (default: null)
+elapsed, (number, default: null)
+beforeRegister, (number, default: null)
+beforeLogin, (number, default: null)
+beforeVerify, (number, default: null)
+createAt, (auto)
+updateAt, (auto)
+}
+
+1. Add_history_machine: POST: {url}/history_api/add_machine
+Example: body {
+	"IP": "161.57.19.125",
+	"computerName": "Clyburn",
+	"machineId": "10bee934-6043-456e-beb7-84d773b90a45",
+    "createdDate": "12/19/2021",
+	"verifySuccess": false,
+	"registerSuccess": false,
+	"email": "jclyburn9@dion.ne.jp",
+	"emailPassword": "rvZBCAyVjm08",
+	"UID": "861a71ec-8a7e-4791-99f5-d080a3d82d22",
+	"password": "jDMG7qrr",
+	"note": "Bosnia and Herzegovina",
+	"tag": "Chevrolet",
+	"elapsed": 48,
+	"beforeRegister": 16,
+	"beforeLogin": 44,
+	"beforeVerify": 31
+}
+
+2. Update_history_machine: PATCH: {url}/history_api/update/:id
+{
+    "note": "Germany"
+}
+
+3. Delete_history_machine: DELETE: {url}/history_api/delete/:id
+
+4. Get_all_info: GET: {url}/history_api/all_info?page=1&limit10
+
+5.Get_info_with_filter: GET: {url}/history_api/info?page={NUMBER}&limit={NUMBER}&computerName={STRING}&IP={STRING}&verifySuccess={BOOLEAN}&registerSuccess={BOOLEAN}&dateStart={DATE}&dateEnd={DATE}
+(Fields are optional)
+
+Example: http://localhost:5003/history_api/info?page=1&limit=10&computerName=Clyburn&IP=161.57.19.125&verifySuccess=true&registerSuccess=false&dateStart=10/25/2021Z&dateEnd=12/01/2021Z
+
+
+Note: Time: mm/dd/yyyyZ (Z = UTC+0) 
