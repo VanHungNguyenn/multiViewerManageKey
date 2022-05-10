@@ -6,7 +6,7 @@ router.get('/all', keyCtrl.getAllKey)
 router.put('/update/:id', keyCtrl.updateKey)
 router.delete('/delete/:id', keyCtrl.deleteKey)
 
-router.get(function (req, res, next) {
+router.get((req, res) => {
 	res.status(404).json({ msg: '404: File Not Found' })
 })
 
