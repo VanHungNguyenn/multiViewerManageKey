@@ -74,13 +74,13 @@ const userCtrl = {
 				})
 			}
 
-			const refreshToken = createRefreshToken({ id: user._id })
+			const refresh_token = createRefreshToken({ id: user._id })
 			const accessToken = createAccessToken({ id: user._id })
 
-			res.cookie('refreshToken', refreshToken, {
+			res.cookie('refreshtoken', refresh_token, {
 				httpOnly: true,
-				maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
 				path: '/user/refresh_token',
+				maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
 			})
 
 			res.status(200).json({
@@ -91,7 +91,7 @@ const userCtrl = {
 			return res.status(500).json({ msg: error.message })
 		}
 	},
-	getAccessToken: async (req, res) => {
+	getRefreshToken: async (req, res) => {
 		try {
 			const { refreshToken } = req.cookies
 

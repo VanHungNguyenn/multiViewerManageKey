@@ -6,7 +6,7 @@ const authAdmin = require('../middlewares/authAdmin')
 // All
 router.post('/register', userCtrl.register)
 router.post('/login', userCtrl.login)
-router.get('/access_token', userCtrl.getAccessToken)
+router.post('/refresh_token', userCtrl.getRefreshToken)
 // Seller
 router.get('/logout', auth, userCtrl.logout)
 router.get('/infor', auth, userCtrl.getInfor)
