@@ -137,8 +137,6 @@ const userCtrl = {
 	},
 	getInfor: async (req, res) => {
 		try {
-			console.log(req.user)
-
 			const user = await UserModel.findOne({ _id: req.user.id }).select(
 				'-password'
 			)

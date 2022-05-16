@@ -11,8 +11,8 @@ app.use(cors())
 app.use(cookieParser())
 
 // Routes
-app.use('/user', require('./routes/userRouter'))
-app.use('/key', require('./routes/keyRouter'))
+app.use('/api/user', require('./routes/userRouter'))
+app.use('/api/key', require('./routes/keyRouter'))
 
 // Connect to mongoose
 const URI = process.env.MONGODB_URL
