@@ -10,11 +10,13 @@ const keyCtrl = {
 			if (!key || !total || !seller || !expired) {
 				return res
 					.status(400)
-					.json({ msg: 'Please fill in all fields' })
+					.json({ message: 'Key, price, expired is required!' })
 			}
 			// check total is number?
 			if (!isNumber(total)) {
-				return res.status(400).json({ msg: 'Total must be a number' })
+				return res
+					.status(400)
+					.json({ message: 'Total must be a number' })
 			}
 
 			const newKey = new KeyModel({
@@ -27,10 +29,10 @@ const keyCtrl = {
 			})
 
 			await newKey.save().then(() => {
-				res.status(200).json({ msg: 'Key added' })
+				res.status(200).json({ message: 'Key added' })
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
 		}
 	},
 	getAllKey: async (req, res) => {
@@ -46,9 +48,9 @@ const keyCtrl = {
 						: null
 				)
 
-			res.status(200).json({ total: result.length, keys })
+			res.status(200).json({ total: keys.length, keys })
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
 		}
 	},
 	updateKey: async (req, res) => {
@@ -59,7 +61,7 @@ const keyCtrl = {
 			if (!key || !expired) {
 				return res
 					.status(400)
-					.json({ msg: 'Please fill in all fields' })
+					.json({ message: 'Please fill in all fields' })
 			}
 
 			await KeyModel.findOneAndUpdate(
@@ -73,20 +75,20 @@ const keyCtrl = {
 					forever,
 				}
 			).then(() => {
-				res.status(200).json({ msg: 'Key updated' })
+				res.status(200).json({ message: 'Key updated' })
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
 		}
 	},
 	deleteKey: async (req, res) => {
 		try {
 			const { id } = req.params
 			await KeyModel.findOneAndUpdate({ id_key: id }).then(() => {
-				res.status(200).json({ msg: 'Key deleted' })
+				res.status(200).json({ message: 'Key deleted' })
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
 		}
 	},
 }

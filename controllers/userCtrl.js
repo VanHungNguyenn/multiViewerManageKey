@@ -91,18 +91,18 @@ const userCtrl = {
 			return res.status(500).json({ msg: error.message })
 		}
 	},
-	getRefreshToken: async (req, res) => {
+	getAccessToken: async (req, res) => {
 		try {
-			const { refreshToken } = req.cookies
+			const { refreshtoken } = req.cookies
 
-			if (!refreshToken) {
+			if (!refreshtoken) {
 				return res.status(400).json({
 					message: 'Please login now!',
 				})
 			}
 
 			jwt.verify(
-				refreshToken,
+				refreshtoken,
 				process.env.REFRESH_TOKEN_SECRET,
 				(err, decoded) => {
 					if (err) {
@@ -126,7 +126,7 @@ const userCtrl = {
 	},
 	logout: async (req, res) => {
 		try {
-			res.clearCookie('refreshToken', { path: '/user/refresh_token' })
+			res.clearCookie('refreshtoken', { path: '/user/refresh_token' })
 
 			res.status(200).json({
 				message: 'Logout success',
