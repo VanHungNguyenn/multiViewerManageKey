@@ -1,7 +1,7 @@
 const UserModel = require('../models/userModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { createRefreshToken, createAccessToken } = require('../utils')
+const { createAccessToken } = require('../utils')
 
 const userCtrl = {
 	register: async (req, res) => {
@@ -70,64 +70,22 @@ const userCtrl = {
 
 			if (!isMatch) {
 				return res.status(400).json({
-					message: 'Password is incorrect',
+					message: 'Username or password is incorrect',
 				})
 			}
 
-			const refresh_token = createRefreshToken({ id: user._id })
-			const accessToken = createAccessToken({ id: user._id })
-
-			res.cookie('refreshtoken', refresh_token, {
-				httpOnly: true,
-				path: '/user/refresh_token',
-				maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-			})
+			const token = createAccessToken({ id: user._id })
 
 			res.status(200).json({
-				accessToken,
 				message: 'Login success',
+				token,
 			})
-		} catch (error) {
-			return res.status(500).json({ msg: error.message })
-		}
-	},
-	getAccessToken: async (req, res) => {
-		try {
-			const { refreshtoken } = req.cookies
-
-			if (!refreshtoken) {
-				return res.status(400).json({
-					message: 'Please login now!',
-				})
-			}
-
-			jwt.verify(
-				refreshtoken,
-				process.env.REFRESH_TOKEN_SECRET,
-				(err, decoded) => {
-					if (err) {
-						return res.status(400).json({
-							message: 'Please login now!',
-						})
-					}
-
-					const { id } = decoded
-
-					const accessToken = createAccessToken({ id })
-
-					res.status(200).json({
-						accessToken,
-					})
-				}
-			)
 		} catch (error) {
 			return res.status(500).json({ msg: error.message })
 		}
 	},
 	logout: async (req, res) => {
 		try {
-			res.clearCookie('refreshtoken', { path: '/user/refresh_token' })
-
 			res.status(200).json({
 				message: 'Logout success',
 			})
