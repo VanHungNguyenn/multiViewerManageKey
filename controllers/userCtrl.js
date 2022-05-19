@@ -6,7 +6,7 @@ const { createAccessToken } = require('../utils')
 const userCtrl = {
 	register: async (req, res) => {
 		try {
-			const { name, fullname, password, note, role, price } = req.body
+			const { name, fullname, password, note, role, total } = req.body
 
 			if (!name || !fullname || !password) {
 				return res.status(400).json({
@@ -36,7 +36,7 @@ const userCtrl = {
 				password: hashPassword,
 				note,
 				role,
-				price,
+				total,
 			})
 
 			await newUser.save()
@@ -115,7 +115,7 @@ const userCtrl = {
 	},
 	getAllInfor: async (req, res) => {
 		try {
-			const users = await UserModel.find()
+			const users = await UserModel.find().select('-password')
 
 			if (!users) {
 				return res.status(400).json({
@@ -143,7 +143,7 @@ const userCtrl = {
 				})
 			}
 
-			const user = await UserModel.findOne({ id_user: id })
+			const user = await UserModel.findById(id)
 
 			if (!user) {
 				return res.status(400).json({
@@ -153,34 +153,22 @@ const userCtrl = {
 
 			let hashPassword = user.password
 
-			if (password) {
-				if (password.length < 6) {
-					return res.status(400).json({
-						message: 'Password must be at least 6 characters long',
-					})
-				}
+			// if password is not empty, then hash password, else keep password
 
+			if (password) {
 				hashPassword = await bcrypt.hash(password, 12)
 			}
 
-			const newUser = await UserModel.findOneAndUpdate(
-				{ id_user: id },
-				{
-					fullname,
-					note,
-					role,
-					password: hashPassword,
-				}
-			)
-
-			if (!newUser) {
-				return res.status(400).json({
-					message: 'Update user failed',
-				})
+			const newUser = {
+				fullname,
+				note,
+				role,
+				password: hashPassword,
 			}
 
+			await UserModel.findByIdAndUpdate(id, newUser)
+
 			res.status(200).json({
-				newUser,
 				message: 'Update user success',
 			})
 		} catch (error) {
@@ -189,7 +177,7 @@ const userCtrl = {
 	},
 	create: async (req, res) => {
 		try {
-			const { name, fullname, password, note, role, price } = req.body
+			const { name, fullname, password, note, role, total } = req.body
 
 			if (!name || !fullname) {
 				return res.status(400).json({
@@ -219,7 +207,7 @@ const userCtrl = {
 				password: hashPassword,
 				note,
 				role,
-				price,
+				total,
 			})
 
 			await newUser.save()
@@ -235,7 +223,7 @@ const userCtrl = {
 		try {
 			const { id } = req.params
 
-			await UserModel.findOneAndDelete({ id_user: id }).then((user) => {
+			await UserModel.findByIdAndDelete(id).then((user) => {
 				if (!user) {
 					return res.status(400).json({
 						message: 'User not found',
@@ -245,6 +233,26 @@ const userCtrl = {
 						message: 'User deleted',
 					})
 				}
+			})
+		} catch (error) {
+			return res.status(500).json({ msg: error.message })
+		}
+	},
+	getInforById: async (req, res) => {
+		try {
+			const { id } = req.params
+
+			const user = await UserModel.findById(id).select('-password')
+
+			if (!user) {
+				return res.status(400).json({
+					message: 'User not found',
+				})
+			}
+
+			res.status(200).json({
+				user,
+				message: 'Get user infor success',
 			})
 		} catch (error) {
 			return res.status(500).json({ msg: error.message })

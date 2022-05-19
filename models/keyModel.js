@@ -8,7 +8,7 @@ const keySchema = new mongoose.Schema(
 			required: true,
 			unique: true,
 		},
-		total: {
+		price: {
 			type: Number,
 			required: true,
 		},

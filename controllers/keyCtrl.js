@@ -5,23 +5,23 @@ const { isNumber } = require('../utils')
 const keyCtrl = {
 	addKey: async (req, res) => {
 		try {
-			const { key, total, note, seller, expired, forever } = req.body
+			const { key, price, note, seller, expired, forever } = req.body
 			// validate
-			if (!key || !total || !seller || !expired) {
+			if (!key || !price || !seller || !expired) {
 				return res
 					.status(400)
 					.json({ message: 'Key, price, expired is required!' })
 			}
-			// check total is number?
-			if (!isNumber(total)) {
+			// check price is number?
+			if (!isNumber(price)) {
 				return res
 					.status(400)
-					.json({ message: 'Total must be a number' })
+					.json({ message: 'price must be a number' })
 			}
 
 			const newKey = new KeyModel({
 				key,
-				total,
+				price,
 				note,
 				seller,
 				expired,
@@ -56,7 +56,7 @@ const keyCtrl = {
 	updateKey: async (req, res) => {
 		try {
 			const { id } = req.params
-			const { key, note, expired, forever } = req.body
+			const { key, note, expired, forever, price } = req.body
 			// validate
 			if (!key || !expired) {
 				return res
@@ -64,17 +64,13 @@ const keyCtrl = {
 					.json({ message: 'Please fill in all fields' })
 			}
 
-			await KeyModel.findOneAndUpdate(
-				{
-					id_key: id,
-				},
-				{
-					key,
-					note,
-					expired,
-					forever,
-				}
-			).then(() => {
+			await KeyModel.findByIdAndUpdate(id, {
+				key,
+				note,
+				expired,
+				forever,
+				price,
+			}).then(() => {
 				res.status(200).json({ message: 'Key updated' })
 			})
 		} catch (error) {
@@ -84,9 +80,35 @@ const keyCtrl = {
 	deleteKey: async (req, res) => {
 		try {
 			const { id } = req.params
-			await KeyModel.findOneAndUpdate({ id_key: id }).then(() => {
+
+			await KeyModel.findByIdAndDelete(id).then(() => {
 				res.status(200).json({ message: 'Key deleted' })
 			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	},
+	getKey: async (req, res) => {
+		try {
+			const { id } = req.params
+
+			await KeyModel.findById(id).then((key) => {
+				res.status(200).json(key)
+			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	},
+	getAllInfor: async (req, res) => {
+		try {
+			const keys = await KeyModel.find()
+			const totalPrice = keys.reduce((acc, key) => {
+				return acc + key.price
+			}, 0)
+
+			const totalKey = keys.length
+
+			res.status(200).json({ totalKey, totalPrice })
 		} catch (error) {
 			return res.status(500).json({ message: error.message })
 		}
