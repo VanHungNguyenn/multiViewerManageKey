@@ -7,24 +7,29 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			require: true,
 			unique: true,
-		},
-		fullname: {
-			type: String,
-			require: true,
-		},
-		note: {
-			type: String,
-			default: '',
+			lowercase: true,
 		},
 		password: {
 			type: String,
 			require: true,
 		},
+		email: {
+			type: String,
+			require: true,
+		},
 		role: {
 			type: Number,
-			default: 1, // 0: admin, 1: seller
+			default: 2, // 0: admin, 1: seller, 2: user
 		},
-		total: {
+		note: {
+			type: String,
+			default: '',
+		},
+		totalDeposit: {
+			type: Number,
+			default: 0,
+		},
+		balance: {
 			type: Number,
 			default: 0,
 		},
@@ -35,4 +40,4 @@ const userSchema = new mongoose.Schema(
 )
 
 userSchema.plugin(AutoIncrement, { inc_field: 'id_user' })
-module.exports = mongoose.model('Users', userSchema)
+module.exports = mongoose.model('UserModel', userSchema)

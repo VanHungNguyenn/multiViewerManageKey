@@ -1,0 +1,13 @@
+### Admin POST create new product 
+POST http://localhost:5015/api/product/create
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+
+{
+    "nameProduct": "Product 3",
+    "price": 20000,
+    "desc": "Description 2"
+}
+
+
+

@@ -1,12 +1,12 @@
 const UserModel = require('../models/userModel')
 
-const authAdmin = async (req, res, next) => {
+const authSeller = async (req, res, next) => {
 	try {
 		const user = await UserModel.findOne({
 			_id: req.user.id,
 		})
 
-		if (user.role !== 0) {
+		if (user.role !== 1 && user.role !== 0) {
 			return res.status(400).json({
 				message: 'You are not authorized to access this page',
 			})
@@ -18,4 +18,4 @@ const authAdmin = async (req, res, next) => {
 	}
 }
 
-module.exports = authAdmin
+module.exports = authSeller

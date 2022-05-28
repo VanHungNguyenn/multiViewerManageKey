@@ -1,5 +1,4 @@
 const KeyModel = require('../models/keyModel')
-const HistoryModel = require('../models/historyModel')
 const { isNumber } = require('../utils')
 
 const keyCtrl = {

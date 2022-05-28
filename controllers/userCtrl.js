@@ -1,16 +1,33 @@
 const UserModel = require('../models/userModel')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const { createAccessToken } = require('../utils')
+const { createAccessToken, validateEmail } = require('../utils')
 
 const userCtrl = {
 	register: async (req, res) => {
 		try {
-			const { name, fullname, password, note, role, total } = req.body
+			const { name, email, password, confirmPassword } = req.body
 
-			if (!name || !fullname || !password) {
+			if (!name || !email || !password || !confirmPassword) {
 				return res.status(400).json({
-					message: 'User name, full name and password are required',
+					message: 'Missing required fields',
+				})
+			}
+
+			if (password.length < 6) {
+				return res.status(400).json({
+					message: 'Password must be at least 6 characters',
+				})
+			}
+
+			if (password !== confirmPassword) {
+				return res.status(400).json({
+					message: 'Password and confirm password must match',
+				})
+			}
+
+			if (!validateEmail(email)) {
+				return res.status(400).json({
+					message: 'Email is invalid',
 				})
 			}
 
@@ -18,13 +35,7 @@ const userCtrl = {
 
 			if (user) {
 				return res.status(400).json({
-					message: 'User name is already exists',
-				})
-			}
-
-			if (password.length < 6) {
-				return res.status(400).json({
-					message: 'Password must be at least 6 characters long',
+					message: 'Username is already exists',
 				})
 			}
 
@@ -32,20 +43,17 @@ const userCtrl = {
 
 			const newUser = new UserModel({
 				name,
-				fullname,
 				password: hashPassword,
-				note,
-				role,
-				total,
+				email,
 			})
 
 			await newUser.save()
 
 			res.status(200).json({
-				message: 'User created',
+				message: 'Register user successfully',
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
 		}
 	},
 	login: async (req, res) => {
@@ -54,7 +62,7 @@ const userCtrl = {
 
 			if (!name || !password) {
 				return res.status(400).json({
-					message: 'User name and password are required',
+					message: 'Username and password are required',
 				})
 			}
 
@@ -81,19 +89,10 @@ const userCtrl = {
 				token,
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
 		}
 	},
-	logout: async (req, res) => {
-		try {
-			res.status(200).json({
-				message: 'Logout success',
-			})
-		} catch (error) {
-			return res.status(500).json({ msg: error.message })
-		}
-	},
-	getInfor: async (req, res) => {
+	getProfile: async (req, res) => {
 		try {
 			const user = await UserModel.findOne({ _id: req.user.id }).select(
 				'-password'
@@ -107,10 +106,10 @@ const userCtrl = {
 
 			res.status(200).json({
 				user,
-				message: 'Get user infor success',
+				message: 'Get user profile success',
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
 		}
 	},
 	getAllInfor: async (req, res) => {
@@ -128,18 +127,78 @@ const userCtrl = {
 				message: 'Get users infor success',
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
+		}
+	},
+	createNewUser: async (req, res) => {
+		try {
+			const { name, email, password, confirmPassword, role } = req.body
+
+			if (!name || !email || !password || !confirmPassword) {
+				return res.status(400).json({
+					message: 'Missing required fields',
+				})
+			}
+
+			if (password.length < 6) {
+				return res.status(400).json({
+					message: 'Password must be at least 6 characters',
+				})
+			}
+
+			if (password !== confirmPassword) {
+				return res.status(400).json({
+					message: 'Password and confirm password must match',
+				})
+			}
+
+			if (!validateEmail(email)) {
+				return res.status(400).json({
+					message: 'Email is invalid',
+				})
+			}
+
+			const user = await UserModel.findOne({ name })
+
+			if (user) {
+				return res.status(400).json({
+					message: 'Username is already exists',
+				})
+			}
+
+			const hashPassword = await bcrypt.hash(password, 12)
+
+			const newUser = new UserModel({
+				name,
+				password: hashPassword,
+				email,
+				role,
+			})
+
+			await newUser.save()
+
+			res.status(200).json({
+				message: 'Register user successfully',
+			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
 		}
 	},
 	updateUser: async (req, res) => {
 		try {
 			const { id } = req.params
 
-			const { fullname, note, role, password } = req.body
+			const { email, note, role, password } = req.body
 
-			if (!fullname) {
+			if (!email) {
 				return res.status(400).json({
-					message: 'Full name is required',
+					message: 'Email is required',
+				})
+			}
+
+			if (!validateEmail(email)) {
+				return res.status(400).json({
+					message: 'Email is invalid',
 				})
 			}
 
@@ -156,11 +215,18 @@ const userCtrl = {
 			// if password is not empty, then hash password, else keep password
 
 			if (password) {
+				// validate password
+				if (password.length < 6) {
+					return res.status(400).json({
+						message: 'Password must be at least 6 characters',
+					})
+				}
+
 				hashPassword = await bcrypt.hash(password, 12)
 			}
 
 			const newUser = {
-				fullname,
+				email,
 				note,
 				role,
 				password: hashPassword,
@@ -172,51 +238,7 @@ const userCtrl = {
 				message: 'Update user success',
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
-		}
-	},
-	create: async (req, res) => {
-		try {
-			const { name, fullname, password, note, role, total } = req.body
-
-			if (!name || !fullname) {
-				return res.status(400).json({
-					message: 'User name, full name and password are required',
-				})
-			}
-
-			const user = await UserModel.findOne({ name })
-
-			if (user) {
-				return res.status(400).json({
-					message: 'User name is already exists',
-				})
-			}
-
-			if (password.length < 6) {
-				return res.status(400).json({
-					message: 'Password must be at least 6 characters long',
-				})
-			}
-
-			const hashPassword = await bcrypt.hash(password, 12)
-
-			const newUser = new UserModel({
-				name,
-				fullname,
-				password: hashPassword,
-				note,
-				role,
-				total,
-			})
-
-			await newUser.save()
-
-			res.status(200).json({
-				message: 'User created',
-			})
-		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ error: error.message })
 		}
 	},
 	deleteUser: async (req, res) => {
@@ -235,10 +257,10 @@ const userCtrl = {
 				}
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
 		}
 	},
-	getInforById: async (req, res) => {
+	getProfileById: async (req, res) => {
 		try {
 			const { id } = req.params
 
@@ -255,7 +277,43 @@ const userCtrl = {
 				message: 'Get user infor success',
 			})
 		} catch (error) {
-			return res.status(500).json({ msg: error.message })
+			return res.status(500).json({ message: error.message })
+		}
+	},
+	changeBalance: async (req, res) => {
+		try {
+			const { id } = req.params
+
+			const { value, action } = req.body
+
+			if (!value || !action) {
+				return res.status(400).json({
+					message: 'Missing required fields',
+				})
+			}
+
+			const user = await UserModel.findById(id)
+
+			if (!user) {
+				return res.status(400).json({
+					message: 'User not found',
+				})
+			}
+
+			if (action === '+') {
+				user.balance += parseInt(value)
+				user.totalDeposit += parseInt(value)
+			} else {
+				user.balance -= parseInt(value)
+			}
+
+			await user.save()
+
+			res.status(200).json({
+				message: 'Change balance success',
+			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
 		}
 	},
 }

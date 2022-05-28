@@ -1,0 +1,69 @@
+### POST register_user ###
+POST http://localhost:5015/api/user/register
+Content-Type: application/json
+
+{
+    "name": "dachuynh",
+    "password": "12345678",
+    "confirmPassword": "12345678",
+    "email": "dachuynh69@gmail.com"
+}
+
+### POST login_user ###
+
+POST http://localhost:5015/api/user/login
+Content-Type: application/json
+
+{
+    "name": "vanhungnguyen",
+    "password": "03121997"
+}
+
+### GET get_user_by_id ###
+GET http://localhost:5015/api/user/profile
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+
+### Admin GET get_all_user ###
+GET http://localhost:5015/api/user/all
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+
+### Admin POST create_user ###
+POST http://localhost:5015/api/user/create
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+
+{
+    "name": "luongductrong",
+    "password": "12345678",
+    "confirmPassword": "12345678",
+    "email": "luongductrong@gmail.com",
+    "role": 1
+}
+
+### Admin PUT update_user ###
+PUT http://localhost:5015/api/user/update/6291e4713d2ad4aacffb71be
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+
+{
+    "email": "luongductrong01@gmail.com",
+    "role": 2
+}
+
+### Admin DELETE delete_user ###
+DELETE http://localhost:5015/api/user/delete/6291e4713d2ad4aacffb71be
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+
+### Admin GET get_user_by_id ###
+GET http://localhost:5015/api/user/profile/6291ec741ff3225b53e10cbd
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+
+### Admin PUT change_balance_user ###
+PUT http://localhost:5015/api/user/change_balance/6291ec741ff3225b53e10cbd
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+
+{
+    "value": 5000,
+    "action": "-"
+}
