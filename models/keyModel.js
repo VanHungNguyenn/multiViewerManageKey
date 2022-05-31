@@ -8,9 +8,17 @@ const keySchema = new mongoose.Schema(
 			required: true,
 			unique: true,
 		},
+		idProduct: {
+			type: Number,
+			required: true,
+		},
 		price: {
 			type: Number,
 			required: true,
+		},
+		idName: {
+			type: Number,
+			default: null,
 		},
 		note: {
 			type: String,
@@ -18,7 +26,7 @@ const keySchema = new mongoose.Schema(
 		},
 		seller: {
 			type: String,
-			required: true,
+			default: null,
 		},
 		expired: {
 			type: Date,

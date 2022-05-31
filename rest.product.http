@@ -4,10 +4,28 @@ Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
 
 {
-    "nameProduct": "Product 3",
+    "nameProduct": "Product 4",
     "price": 20000,
-    "desc": "Description 2"
+    "desc": "Description of product 4"
 }
 
+### Admin GET all products
+GET http://localhost:5015/api/product/all
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
 
+### Admin PUT update product
+PUT http://localhost:5015/api/product/update/6291fafe4f61b2dd40364bbf
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+
+{
+    "desc": "Description of product 3",
+    "price": "60000"
+}
+
+### Admin DELETE product
+DELETE http://localhost:5015/api/product/delete/6295cae7b50d6ce139b99707
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
 

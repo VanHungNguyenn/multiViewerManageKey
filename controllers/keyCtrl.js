@@ -1,34 +1,57 @@
 const KeyModel = require('../models/keyModel')
+const ProductModel = require('../models/productModel')
+const UserModel = require('../models/userModel')
 const { isNumber } = require('../utils')
 
 const keyCtrl = {
 	addKey: async (req, res) => {
 		try {
-			const { key, price, note, seller, expired, forever } = req.body
+			const {
+				key,
+				price,
+				idProduct,
+				idName,
+				note,
+				seller,
+				expired,
+				forever,
+			} = req.body
 			// validate
-			if (!key || !price || !seller || !expired) {
-				return res
-					.status(400)
-					.json({ message: 'Key, price, expired is required!' })
+			if (!key || !price || !idProduct || !expired) {
+				return res.status(400).json({
+					message: 'Key, price, expired and idProduct are required!',
+				})
 			}
 			// check price is number?
 			if (!isNumber(price)) {
 				return res
 					.status(400)
-					.json({ message: 'price must be a number' })
+					.json({ message: 'Price must be a number' })
 			}
 
-			const newKey = new KeyModel({
+			// check key is unique?
+			const checkKey = await KeyModel.findOne({ key })
+			if (checkKey) {
+				return res.status(400).json({ message: 'Key is already exist' })
+			}
+
+			// create key
+			const keyModel = new KeyModel({
 				key,
 				price,
+				idProduct,
+				idName,
 				note,
 				seller,
 				expired,
 				forever,
 			})
 
-			await newKey.save().then(() => {
-				res.status(200).json({ message: 'Key added' })
+			const newKey = await keyModel.save()
+
+			return res.status(200).json({
+				message: 'Key created successfully',
+				data: newKey,
 			})
 		} catch (error) {
 			return res.status(500).json({ message: error.message })
@@ -36,82 +59,94 @@ const keyCtrl = {
 	},
 	getAllKey: async (req, res) => {
 		try {
-			const { page, limit } = req.query
+			const allKeys = await KeyModel.find()
 
-			const keys = await KeyModel.find()
-				.sort({ createdAt: 1 })
-				.limit(limit ? Number(limit) : null)
-				.skip(
-					page
-						? (Number(page) - 1) * (limit ? Number(limit) : null)
-						: null
+			const allUsers = await UserModel.find()
+			const allProducts = await ProductModel.find()
+
+			const keys = allKeys.map((key) => {
+				const user = allUsers.find(
+					(user) => user.id_user === key.idName
+				)
+				const product = allProducts.find(
+					(product) => product.id_product === key.idProduct
 				)
 
-			res.status(200).json({ total: keys.length, keys })
-		} catch (error) {
-			return res.status(500).json({ message: error.message })
-		}
-	},
-	updateKey: async (req, res) => {
-		try {
-			const { id } = req.params
-			const { key, note, expired, forever, price } = req.body
-			// validate
-			if (!key || !expired) {
-				return res
-					.status(400)
-					.json({ message: 'Please fill in all fields' })
-			}
+				return {
+					...key._doc,
+					name: user ? user._doc.name : null,
+					nameProduct: product ? product._doc.nameProduct : null,
+				}
+			})
 
-			await KeyModel.findByIdAndUpdate(id, {
-				key,
-				note,
-				expired,
-				forever,
-				price,
-			}).then(() => {
-				res.status(200).json({ message: 'Key updated' })
+			return res.status(200).json({
+				message: 'Get all key successfully',
+				data: keys,
 			})
 		} catch (error) {
 			return res.status(500).json({ message: error.message })
 		}
 	},
-	deleteKey: async (req, res) => {
-		try {
-			const { id } = req.params
+	// updateKey: async (req, res) => {
+	// 	try {
+	// 		const { id } = req.params
+	// 		const { key, note, expired, forever, price } = req.body
+	// 		// validate
+	// 		if (!key || !expired) {
+	// 			return res
+	// 				.status(400)
+	// 				.json({ message: 'Please fill in all fields' })
+	// 		}
 
-			await KeyModel.findByIdAndDelete(id).then(() => {
-				res.status(200).json({ message: 'Key deleted' })
-			})
-		} catch (error) {
-			return res.status(500).json({ message: error.message })
-		}
-	},
-	getKey: async (req, res) => {
-		try {
-			const { id } = req.params
+	// 		await KeyModel.findByIdAndUpdate(id, {
+	// 			key,
+	// 			note,
+	// 			expired,
+	// 			forever,
+	// 			price,
+	// 		}).then(() => {
+	// 			res.status(200).json({ message: 'Key updated' })
+	// 		})
+	// 	} catch (error) {
+	// 		return res.status(500).json({ message: error.message })
+	// 	}
+	// },
+	// deleteKey: async (req, res) => {
+	// 	try {
+	// 		const { id } = req.params
 
-			await KeyModel.findById(id).then((key) => {
-				res.status(200).json(key)
-			})
-		} catch (error) {
-			return res.status(500).json({ message: error.message })
-		}
-	},
-	getAllInfor: async (req, res) => {
-		try {
-			const keys = await KeyModel.find()
-			const totalPrice = keys.reduce((acc, key) => {
-				return acc + key.price
-			}, 0)
+	// 		await KeyModel.findByIdAndDelete(id).then(() => {
+	// 			res.status(200).json({ message: 'Key deleted' })
+	// 		})
+	// 	} catch (error) {
+	// 		return res.status(500).json({ message: error.message })
+	// 	}
+	// },
+	// getKey: async (req, res) => {
+	// 	try {
+	// 		const { id } = req.params
 
-			const totalKey = keys.length
+	// 		await KeyModel.findById(id).then((key) => {
+	// 			res.status(200).json(key)
+	// 		})
+	// 	} catch (error) {
+	// 		return res.status(500).json({ message: error.message })
+	// 	}
+	// },
+	// getAllInfor: async (req, res) => {
+	// 	try {
+	// 		const keys = await KeyModel.find()
+	// 		const totalPrice = keys.reduce((acc, key) => {
+	// 			return acc + key.price
+	// 		}, 0)
 
-			res.status(200).json({ totalKey, totalPrice })
-		} catch (error) {
-			return res.status(500).json({ message: error.message })
-		}
-	},
+	// 		const totalKey = keys.length
+
+	// 		res.status(200).json({ totalKey, totalPrice })
+	// 	} catch (error) {
+	// 		return res.status(500).json({ message: error.message })
+	// 	}
+	// },
 }
 
 module.exports = keyCtrl

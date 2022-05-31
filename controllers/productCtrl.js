@@ -44,6 +44,86 @@ const productCtrl = {
 			})
 		}
 	},
+	getAllProducts: async (req, res) => {
+		try {
+			const products = await ProductModel.find()
+
+			return res.status(200).json({
+				message: 'Products retrieved',
+				products,
+			})
+		} catch (error) {
+			res.status(500).json({
+				message: error.message,
+			})
+		}
+	},
+	updateProduct: async (req, res) => {
+		try {
+			const { id } = req.params
+			const { nameProduct, price, desc } = req.body
+
+			if (!id) {
+				return res.status(400).json({
+					message: 'Id is required',
+				})
+			}
+
+			const productExist = await ProductModel.findById(id)
+
+			if (!productExist) {
+				return res.status(400).json({
+					message: 'Product not found',
+				})
+			}
+
+			// Update product
+			await ProductModel.findByIdAndUpdate(id, {
+				nameProduct,
+				price,
+				desc,
+			})
+
+			return res.status(200).json({
+				message: 'Product updated',
+			})
+		} catch (error) {
+			res.status(500).json({
+				message: error.message,
+			})
+		}
+	},
+	deleteProduct: async (req, res) => {
+		try {
+			const { id } = req.params
+
+			if (!id) {
+				return res.status(400).json({
+					message: 'Id is required',
+				})
+			}
+
+			const productExist = await ProductModel.findById(id)
+
+			if (!productExist) {
+				return res.status(400).json({
+					message: 'Product not found',
+				})
+			}
+
+			// Delete product
+
+			await ProductModel.findByIdAndDelete(id)
+
+			return res.status(200).json({
+				message: 'Product deleted',
+			})
+		} catch (error) {
+			res.status(500).json({
+				message: error.message,
+			})
+		}
+	},
 }
 
 module.exports = productCtrl
