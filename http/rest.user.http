@@ -3,10 +3,10 @@ POST http://localhost:5015/api/user/register
 Content-Type: application/json
 
 {
-    "name": "dachuynh",
-    "password": "12345678",
-    "confirmPassword": "12345678",
-    "email": "dachuynh69@gmail.com"
+    "name": "vanhungnguyen",
+    "password": "03121997",
+    "confirmPassword": "03121997",
+    "email": "vanhungnguyenbku@gmail.com"
 }
 
 ### POST login_user ###

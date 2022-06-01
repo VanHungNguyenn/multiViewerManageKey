@@ -5,13 +5,13 @@ const historyBankSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	nameUser: {
-		type: String,
-		required: true,
-	},
 	amount: {
 		type: Number,
 		required: true,
+	},
+	nameUser: {
+		type: String,
+		default: null,
 	},
 	date: {
 		type: Date,

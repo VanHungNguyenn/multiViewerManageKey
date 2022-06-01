@@ -1,9 +1,9 @@
 POST http://localhost:5015/api/account/add 
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTc3MjFkMmUxNGJhMDdlNGQ1NTY3YyIsImlhdCI6MTY1NDA5MjMyNywiZXhwIjoxNjU1Mzg4MzI3fQ.mXJMAPPKGx0iqpnh4yJ1RxUN_XQCogqFtyYQEKE4tOQ
 
 {
-    "title": "techcombank",
-    "api": "Techcombank API",
-    "password": "123456"
+    "title": "momo",
+    "api": "Momo API",
+    "password": ""
 }
