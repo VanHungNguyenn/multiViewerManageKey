@@ -87,66 +87,115 @@ const keyCtrl = {
 			return res.status(500).json({ message: error.message })
 		}
 	},
-	// updateKey: async (req, res) => {
-	// 	try {
-	// 		const { id } = req.params
-	// 		const { key, note, expired, forever, price } = req.body
-	// 		// validate
-	// 		if (!key || !expired) {
-	// 			return res
-	// 				.status(400)
-	// 				.json({ message: 'Please fill in all fields' })
-	// 		}
+	updateKey: async (req, res) => {
+		try {
+			const { id } = req.params
 
-	// 		await KeyModel.findByIdAndUpdate(id, {
-	// 			key,
-	// 			note,
-	// 			expired,
-	// 			forever,
-	// 			price,
-	// 		}).then(() => {
-	// 			res.status(200).json({ message: 'Key updated' })
-	// 		})
-	// 	} catch (error) {
-	// 		return res.status(500).json({ message: error.message })
-	// 	}
-	// },
-	// deleteKey: async (req, res) => {
-	// 	try {
-	// 		const { id } = req.params
+			const {
+				key,
+				price,
+				idProduct,
+				idName,
+				note,
+				seller,
+				expired,
+				forever,
+			} = req.body
 
-	// 		await KeyModel.findByIdAndDelete(id).then(() => {
-	// 			res.status(200).json({ message: 'Key deleted' })
-	// 		})
-	// 	} catch (error) {
-	// 		return res.status(500).json({ message: error.message })
-	// 	}
-	// },
-	// getKey: async (req, res) => {
-	// 	try {
-	// 		const { id } = req.params
+			// validate
+			if (!key || !price || !idProduct || !expired) {
+				return res.status(400).json({
+					message: 'Key, price, expired and idProduct are required!',
+				})
+			}
 
-	// 		await KeyModel.findById(id).then((key) => {
-	// 			res.status(200).json(key)
-	// 		})
-	// 	} catch (error) {
-	// 		return res.status(500).json({ message: error.message })
-	// 	}
-	// },
-	// getAllInfor: async (req, res) => {
-	// 	try {
-	// 		const keys = await KeyModel.find()
-	// 		const totalPrice = keys.reduce((acc, key) => {
-	// 			return acc + key.price
-	// 		}, 0)
+			// check key to update is exist?
+			const checkKey = await KeyModel.findById(id)
 
-	// 		const totalKey = keys.length
+			if (!checkKey) {
+				return res.status(400).json({ message: 'Key is not exist' })
+			}
 
-	// 		res.status(200).json({ totalKey, totalPrice })
-	// 	} catch (error) {
-	// 		return res.status(500).json({ message: error.message })
-	// 	}
-	// },
+			// check price is number?
+			if (!isNumber(price)) {
+				return res
+					.status(400)
+					.json({ message: 'Price must be a number' })
+			}
+
+			// update key
+			const updateKey = await KeyModel.findByIdAndUpdate(
+				id,
+				{
+					key,
+					price,
+					idProduct,
+					idName,
+					note,
+					seller,
+					expired,
+					forever,
+				},
+				{ new: true }
+			)
+
+			return res.status(200).json({
+				message: 'Key updated successfully',
+				data: updateKey,
+			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	},
+	deleteKey: async (req, res) => {
+		try {
+			const { id } = req.params
+
+			// delete key
+			const deleteKey = await KeyModel.findByIdAndDelete(id)
+
+			if (!deleteKey) {
+				return res.status(400).json({ message: 'Key is not exist' })
+			}
+
+			return res.status(200).json({
+				message: 'Key deleted successfully',
+			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	},
+	getKey: async (req, res) => {
+		try {
+			const { id } = req.params
+
+			const getKey = await KeyModel.findById(id)
+
+			if (!getKey) {
+				return res.status(400).json({ message: 'Key is not exist' })
+			}
+
+			// get user and nameProduct
+			const user = await UserModel.findOne({ id_user: getKey.idName })
+			const nameProduct = await ProductModel.findOne({
+				id_product: getKey.idProduct,
+			})
+
+			// add user and nameProduct to key
+			const key = {
+				...getKey._doc,
+				name: user ? user._doc.name : null,
+				nameProduct: nameProduct ? nameProduct._doc.nameProduct : null,
+			}
+
+			return res.status(200).json({
+				message: 'Get key successfully',
+				key,
+			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	},
 }
 
 module.exports = keyCtrl

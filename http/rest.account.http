@@ -1,13 +1,9 @@
-### Seller POST add new key ###
-POST http://localhost:5015/api/key/add
+POST http://localhost:5015/api/account/add 
 Content-Type: application/json
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
 
 {
-    "key": "key 1",
-    "price": "50000",
-    "idProduct": 20,
-    "idName": 3,
-    "seller": "vanhungnguyen",
-        "expired": "2022-05-03"
+    "title": "techcombank",
+    "api": "Techcombank API",
+    "password": "123456"
 }
