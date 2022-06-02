@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser')
 const cron = require('node-cron')
 
 const handleAutoMomo = require('./cron/handleAutoMomo')
+const handleAutoBank = require('./cron/handleAutoBank')
 
 const app = express()
 
@@ -40,11 +41,10 @@ mongoose.connect(URI, (err) => {
 	console.log('Connected to mongodb')
 })
 
-handleAutoMomo()
-
 cron.schedule('* * * * *', () => {
 	try {
-		console.log('Running cron job every minute')
+		handleAutoMomo()
+		handleAutoBank()
 	} catch (error) {
 		console.log(error)
 	}

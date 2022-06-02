@@ -41,11 +41,7 @@ const handleAutoMomo = async () => {
 				}
 
 				// not key
-				console.log({ comment })
-
-				if (comment.split(' ')[0] !== key) {
-					console.log(comment)
-
+				if (comment.split(/[\s,]+/)[0] !== key) {
 					const newHistoryMomo = new HistoryMomoModel({
 						id: tranId,
 						amount,
@@ -56,7 +52,7 @@ const handleAutoMomo = async () => {
 					await newHistoryMomo.save()
 				} else {
 					// not key + name
-					if (comment.split(' ').length !== 2) {
+					if (comment.split(/[\s,]+/).length !== 2) {
 						const newHistoryMomo = new HistoryMomoModel({
 							id: tranId,
 							amount,
@@ -66,7 +62,7 @@ const handleAutoMomo = async () => {
 
 						await newHistoryMomo.save()
 					} else {
-						const name = comment.split(' ')[1]
+						const name = comment.split(/[\s,]+/)[1]
 
 						const user = await UserModel.findOne({ name })
 
