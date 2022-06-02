@@ -28,6 +28,11 @@ const handleAutoMomo = async () => {
 
 		for (let i = 0; i < tranList.length; i++) {
 			let { tranId, comment, amount, desc } = tranList[i]
+
+			if (!comment || !desc) {
+				continue
+			}
+
 			comment = comment.trim().toLowerCase()
 
 			if (desc === 'Thành công') {
