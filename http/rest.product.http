@@ -1,31 +1,37 @@
 ### Admin POST create new product 
 POST http://localhost:5015/api/product/create
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsIm5hbWUiOiJ2YW5odW5nbmd1eWVuIiwiaWF0IjoxNjU0NzYyODE5LCJleHAiOjE2NTYwNTg4MTl9.4QMIWmCfeVJ-DFS3tklRldB31lSeTCJns64AVDnKhvU
 
 {
     "nameProduct": "Product 4",
     "price": 20000,
-    "desc": "Description of product 4"
+    "desc": "Description of product 4",
+    "price1": 50000,
+    "price2": 100000,
+    "price3": 200000
 }
 
 ### Admin GET all products
 GET http://localhost:5015/api/product/all
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsIm5hbWUiOiJ2YW5odW5nbmd1eWVuIiwiaWF0IjoxNjU0NzYyODE5LCJleHAiOjE2NTYwNTg4MTl9.4QMIWmCfeVJ-DFS3tklRldB31lSeTCJns64AVDnKhvU
 
 ### Admin PUT update product
 PUT http://localhost:5015/api/product/update/6291fafe4f61b2dd40364bbf
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsIm5hbWUiOiJ2YW5odW5nbmd1eWVuIiwiaWF0IjoxNjU0NzYyODE5LCJleHAiOjE2NTYwNTg4MTl9.4QMIWmCfeVJ-DFS3tklRldB31lSeTCJns64AVDnKhvU
 
 {
     "desc": "Description of product 3",
-    "price": "60000"
+    "price": 5000,
+    "price1": 20000,
+    "price2": 66000,
+    "price3": 105000
 }
 
 ### Admin DELETE product
 DELETE http://localhost:5015/api/product/delete/6295cae7b50d6ce139b99707
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsImlhdCI6MTY1MzcyNzg5OSwiZXhwIjoxNjU1MDIzODk5fQ.-q6AUKEWXTaogkMq1fuGFe-LgFxe2CMYsIUHuIt8ClM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTFkODBmNzQ4MWUyMzc1MjdmZTRlNyIsIm5hbWUiOiJ2YW5odW5nbmd1eWVuIiwiaWF0IjoxNjU0NzYyODE5LCJleHAiOjE2NTYwNTg4MTl9.4QMIWmCfeVJ-DFS3tklRldB31lSeTCJns64AVDnKhvU
 

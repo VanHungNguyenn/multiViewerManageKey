@@ -1,4 +1,7 @@
 const UserModel = require('../models/userModel')
+const HistoryTransactionModel = require('../models/historyTransactionModel')
+const KeyModel = require('../models/keyModel')
+const ProductModel = require('../models/productModel')
 const bcrypt = require('bcrypt')
 const { createAccessToken, validateEmail } = require('../utils')
 
@@ -10,6 +13,13 @@ const userCtrl = {
 			if (!name || !email || !password || !confirmPassword) {
 				return res.status(400).json({
 					message: 'Missing required fields',
+				})
+			}
+
+			// validate name
+			if (name.length < 6) {
+				return res.status(400).json({
+					message: 'Name must be at least 6 characters',
 				})
 			}
 
@@ -82,7 +92,7 @@ const userCtrl = {
 				})
 			}
 
-			const token = createAccessToken({ id: user._id })
+			const token = createAccessToken({ id: user._id, name: user.name })
 
 			res.status(200).json({
 				message: 'Login success',
@@ -112,6 +122,61 @@ const userCtrl = {
 			return res.status(500).json({ message: error.message })
 		}
 	},
+	getHistoryRecharge: async (req, res) => {
+		try {
+			const history = await HistoryTransactionModel.find({
+				nameUser: req.user.name,
+			})
+
+			if (!history) {
+				return res.status(400).json({
+					message: 'History not found',
+				})
+			}
+
+			res.status(200).json({
+				history,
+				message: 'Get history recharge success',
+			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	},
+	getSoftware: async (req, res) => {
+		try {
+			const { id } = req.params
+
+			const keys = await KeyModel.find({
+				idName: id,
+			})
+
+			if (!keys) {
+				return res.status(400).json({
+					message: 'Software not found',
+				})
+			}
+
+			const allProducts = await ProductModel.find()
+
+			const softwares = keys.map((key) => {
+				const product = allProducts.find(
+					(product) => product.id_product === key.idProduct
+				)
+
+				return {
+					...key._doc,
+					nameProduct: product ? product._doc.nameProduct : null,
+				}
+			})
+
+			res.status(200).json({
+				software,
+				message: 'Get software success',
+			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	},
 	getAllInfor: async (req, res) => {
 		try {
 			const users = await UserModel.find().select('-password')
@@ -132,9 +197,9 @@ const userCtrl = {
 	},
 	createNewUser: async (req, res) => {
 		try {
-			const { name, email, password, confirmPassword, role } = req.body
+			const { name, email, password, role, note } = req.body
 
-			if (!name || !email || !password || !confirmPassword) {
+			if (!name || !email || !password) {
 				return res.status(400).json({
 					message: 'Missing required fields',
 				})
@@ -143,12 +208,6 @@ const userCtrl = {
 			if (password.length < 6) {
 				return res.status(400).json({
 					message: 'Password must be at least 6 characters',
-				})
-			}
-
-			if (password !== confirmPassword) {
-				return res.status(400).json({
-					message: 'Password and confirm password must match',
 				})
 			}
 
@@ -173,6 +232,7 @@ const userCtrl = {
 				password: hashPassword,
 				email,
 				role,
+				note,
 			})
 
 			await newUser.save()

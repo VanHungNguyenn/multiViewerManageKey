@@ -65,9 +65,7 @@ const keyCtrl = {
 			const allProducts = await ProductModel.find()
 
 			const keys = allKeys.map((key) => {
-				const user = allUsers.find(
-					(user) => user.id_user === key.idName
-				)
+				const user = allUsers.find((user) => user._id === key.idName)
 				const product = allProducts.find(
 					(product) => product.id_product === key.idProduct
 				)
@@ -82,6 +80,8 @@ const keyCtrl = {
 			return res.status(200).json({
 				message: 'Get all key successfully',
 				data: keys,
+				totalKey: keys.length,
+				totalPrice: keys.reduce((total, key) => total + key.price, 0),
 			})
 		} catch (error) {
 			return res.status(500).json({ message: error.message })
@@ -176,7 +176,7 @@ const keyCtrl = {
 			}
 
 			// get user and nameProduct
-			const user = await UserModel.findOne({ id_user: getKey.idName })
+			const user = await UserModel.findById(getKey.idName)
 			const nameProduct = await ProductModel.findOne({
 				id_product: getKey.idProduct,
 			})

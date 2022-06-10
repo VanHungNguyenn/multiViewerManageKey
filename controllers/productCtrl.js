@@ -4,7 +4,8 @@ const { isNumber } = require('../utils')
 const productCtrl = {
 	createNewProduct: async (req, res) => {
 		try {
-			const { nameProduct, price, desc } = req.body
+			const { nameProduct, price, desc, price1, price2, price3 } =
+				req.body
 
 			if (!nameProduct || !price) {
 				return res.status(400).json({
@@ -13,6 +14,16 @@ const productCtrl = {
 			}
 
 			if (!isNumber(price)) {
+				return res.status(400).json({
+					message: 'Price must be a number',
+				})
+			}
+
+			if (
+				(price1 && !isNumber(price1)) ||
+				(price2 && !isNumber(price2)) ||
+				(price3 && !isNumber(price3))
+			) {
 				return res.status(400).json({
 					message: 'Price must be a number',
 				})
@@ -30,6 +41,9 @@ const productCtrl = {
 				nameProduct,
 				price,
 				desc,
+				price1,
+				price2,
+				price3,
 			})
 
 			await newProduct.save()
@@ -61,11 +75,22 @@ const productCtrl = {
 	updateProduct: async (req, res) => {
 		try {
 			const { id } = req.params
-			const { nameProduct, price, desc } = req.body
+			const { nameProduct, price, desc, price1, price2, price3 } =
+				req.body
 
 			if (!id) {
 				return res.status(400).json({
 					message: 'Id is required',
+				})
+			}
+
+			if (
+				(price1 && !isNumber(price1)) ||
+				(price2 && !isNumber(price2)) ||
+				(price3 && !isNumber(price3))
+			) {
+				return res.status(400).json({
+					message: 'Price must be a number',
 				})
 			}
 
@@ -82,6 +107,9 @@ const productCtrl = {
 				nameProduct,
 				price,
 				desc,
+				price1,
+				price2,
+				price3,
 			})
 
 			return res.status(200).json({

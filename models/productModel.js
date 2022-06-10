@@ -12,6 +12,18 @@ const productSchema = new mongoose.Schema(
 			type: Number,
 			require: true,
 		},
+		price1: {
+			type: Number,
+			default: null,
+		},
+		price2: {
+			type: Number,
+			default: null,
+		},
+		price3: {
+			type: Number,
+			default: null,
+		},
 		desc: {
 			type: String,
 			default: null,

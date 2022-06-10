@@ -16,7 +16,7 @@ const handleAutoMomo = async () => {
 			`https://api.web2m.com/historyapimomo/${momoAPI}`
 		)
 
-		let { tranList } = res.data.momoMsg
+		let tranList = res?.data?.momoMsg?.tranList
 
 		if (!tranList) {
 			return
@@ -105,7 +105,7 @@ const handleAutoMomo = async () => {
 							const balance = user.balance + amount
 							const totalDeposit = user.totalDeposit + amount
 
-							await UserModel.updateOne(
+							await UserModel.findOneAndUpdate(
 								{ name },
 								{
 									$set: {
