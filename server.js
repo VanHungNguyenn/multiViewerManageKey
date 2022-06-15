@@ -18,9 +18,10 @@ app.use(cookieParser())
 
 // Routes
 app.use('/api/user', require('./routes/userRouter'))
-app.use('/api/key', require('./routes/keyRouter'))
-app.use('/api/product', require('./routes/productRouter'))
 app.use('/api/account', require('./routes/accountsRouter'))
+app.use('/api/history', require('./routes/historyRouters'))
+app.use('/api/software', require('./routes/softwareRouter'))
+app.use('/api/softwareoffer', require('./routes/softwareOfferRouter'))
 app.use((req, res, next) => {
 	const error = new Error('Not found')
 	error.status = 404

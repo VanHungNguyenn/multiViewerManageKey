@@ -1,7 +1,5 @@
 const UserModel = require('../models/userModel')
 const HistoryTransactionModel = require('../models/historyTransactionModel')
-const KeyModel = require('../models/keyModel')
-const ProductModel = require('../models/productModel')
 const bcrypt = require('bcrypt')
 const { createAccessToken, validateEmail } = require('../utils')
 
@@ -137,41 +135,6 @@ const userCtrl = {
 			res.status(200).json({
 				history,
 				message: 'Get history recharge success',
-			})
-		} catch (error) {
-			return res.status(500).json({ message: error.message })
-		}
-	},
-	getSoftware: async (req, res) => {
-		try {
-			const { id } = req.params
-
-			const keys = await KeyModel.find({
-				idName: id,
-			})
-
-			if (!keys) {
-				return res.status(400).json({
-					message: 'Software not found',
-				})
-			}
-
-			const allProducts = await ProductModel.find()
-
-			const softwares = keys.map((key) => {
-				const product = allProducts.find(
-					(product) => product.id_product === key.idProduct
-				)
-
-				return {
-					...key._doc,
-					nameProduct: product ? product._doc.nameProduct : null,
-				}
-			})
-
-			res.status(200).json({
-				software,
-				message: 'Get software success',
 			})
 		} catch (error) {
 			return res.status(500).json({ message: error.message })
@@ -344,11 +307,24 @@ const userCtrl = {
 		try {
 			const { id } = req.params
 
-			const { value, action } = req.body
+			const { valuesChange, action } = req.body
 
-			if (!value || !action) {
+			if (!valuesChange) {
 				return res.status(400).json({
-					message: 'Missing required fields',
+					message: 'Value change is required',
+				})
+			}
+
+			// check valuesChange is number
+			if (isNaN(parseInt(valuesChange))) {
+				return res.status(400).json({
+					message: 'Value change must be number',
+				})
+			}
+
+			if (action !== 'add' && action !== 'sub') {
+				return res.status(400).json({
+					message: 'Action must be add or sub',
 				})
 			}
 
@@ -360,18 +336,31 @@ const userCtrl = {
 				})
 			}
 
-			if (action === '+') {
-				user.balance += parseInt(value)
-				user.totalDeposit += parseInt(value)
+			if (action === 'add') {
+				user.balance += parseInt(valuesChange)
+				user.totalDeposit += parseInt(valuesChange)
+
+				await user.save()
+
+				return res.status(200).json({
+					message: 'Add balance successfully',
+				})
 			} else {
-				user.balance -= parseInt(value)
+				if (user.balance < parseInt(valuesChange)) {
+					return res.status(400).json({
+						message: 'Balance is not enough',
+					})
+				}
+
+				user.balance -= parseInt(valuesChange)
+				user.totalDeposit -= parseInt(valuesChange)
+
+				await user.save()
+
+				return res.status(200).json({
+					message: 'Sub balance successfully',
+				})
 			}
-
-			await user.save()
-
-			res.status(200).json({
-				message: 'Change balance success',
-			})
 		} catch (error) {
 			return res.status(500).json({ message: error.message })
 		}
