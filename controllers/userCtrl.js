@@ -120,6 +120,57 @@ const userCtrl = {
 			return res.status(500).json({ message: error.message })
 		}
 	},
+	updatePassword: async (req, res) => {
+		try {
+			const { newPassword, confirmPassword, oldPassword } = req.body
+
+			if (!newPassword || !confirmPassword || !oldPassword) {
+				return res.status(400).json({
+					message: 'Please fill all fields',
+				})
+			}
+
+			if (newPassword.length < 6) {
+				return res.status(400).json({
+					message: 'Password must be at least 6 characters',
+				})
+			}
+
+			if (newPassword !== confirmPassword) {
+				return res.status(400).json({
+					message: 'Password and re-password must be same',
+				})
+			}
+
+			const user = await UserModel.findById(req.user.id)
+
+			if (!user) {
+				return res.status(404).json({
+					message: 'User not found',
+				})
+			}
+
+			const isMatch = await bcrypt.compare(oldPassword, user.password)
+
+			if (!isMatch) {
+				return res.status(400).json({
+					message: 'Old password is incorrect',
+				})
+			}
+
+			const hashPassword = await bcrypt.hash(newPassword, 12)
+
+			await UserModel.findByIdAndUpdate(req.user.id, {
+				password: hashPassword,
+			})
+
+			return res.status(200).json({
+				message: 'Update password successfully',
+			})
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	},
 	getHistoryRecharge: async (req, res) => {
 		try {
 			const history = await HistoryTransactionModel.find({

@@ -12,11 +12,12 @@ const softwareOfferCtrl = {
 				discountValue,
 				note,
 				tag,
+				value,
 			} = req.body
 
-			if (!softwareId || !title || !price) {
+			if (!softwareId || !title || !price || !value) {
 				return res.status(400).json({
-					message: 'softwareId, title, price are required',
+					message: 'softwareId, title, price and value are required',
 				})
 			}
 
@@ -44,6 +45,13 @@ const softwareOfferCtrl = {
 				})
 			}
 
+			// value is number
+			if (isNaN(value)) {
+				return res.status(400).json({
+					message: 'Value must be number',
+				})
+			}
+
 			const software = await SoftwareModel.findOne({ softwareId })
 
 			if (!software) {
@@ -58,6 +66,7 @@ const softwareOfferCtrl = {
 				price,
 				originalPrice,
 				discountValue,
+				value,
 				note,
 				tag,
 			})
@@ -78,12 +87,13 @@ const softwareOfferCtrl = {
 			const softwareOffers = await SoftwareOfferModel.find()
 			const softwares = await SoftwareModel.find()
 
-			const soft = softwares.find(
-				(software) => software.softwareId === softwareOffer.softwareId
-			)
-
 			const softwaresOfferWithNameProduct = softwareOffers.map(
 				(softwareOffer) => {
+					const soft = softwares.find(
+						(software) =>
+							software.softwareId === softwareOffer.softwareId
+					)
+
 					const softwareOfferWithNameProduct = {
 						...softwareOffer._doc,
 						nameProduct: soft.nameProduct,
@@ -95,7 +105,7 @@ const softwareOfferCtrl = {
 
 			res.status(200).json({
 				total: softwaresOfferWithNameProduct.length,
-				softwareOfferWithNameProduct,
+				softwaresOfferWithNameProduct,
 				message: 'Get all software offer successfully',
 			})
 		} catch (error) {
@@ -153,6 +163,7 @@ const softwareOfferCtrl = {
 				price,
 				originalPrice,
 				discountValue,
+				value,
 				note,
 				tag,
 			} = req.body
@@ -198,16 +209,23 @@ const softwareOfferCtrl = {
 				})
 			}
 
+			// value is number
+			if (isNaN(value)) {
+				return res.status(400).json({
+					message: 'Value must be number',
+				})
+			}
+
 			const updatedSoftwareOffer =
 				await SoftwareOfferModel.findByIdAndUpdate(
 					softwareOfferId,
 					{
 						softwareId,
 						title,
-						type,
 						price,
 						originalPrice,
 						discountValue,
+						value,
 						note,
 						tag,
 					},

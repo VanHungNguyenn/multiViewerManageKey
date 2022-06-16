@@ -10,6 +10,7 @@ router.post('/login', userCtrl.login)
 //user
 router.get('/profile', auth, userCtrl.getProfile)
 router.get('/history_recharge', auth, userCtrl.getHistoryRecharge)
+router.put('/update_password', auth, userCtrl.updatePassword)
 //admin
 router.get('/all', auth, authAdmin, userCtrl.getAllInfor)
 router.post('/create', auth, authAdmin, userCtrl.createNewUser)

@@ -22,6 +22,8 @@ app.use('/api/account', require('./routes/accountsRouter'))
 app.use('/api/history', require('./routes/historyRouters'))
 app.use('/api/software', require('./routes/softwareRouter'))
 app.use('/api/softwareoffer', require('./routes/softwareOfferRouter'))
+app.use('/api/softwaresub', require('./routes/softwareSubRouter'))
+app.use('/api/historysub', require('./routes/historySubRouter'))
 app.use((req, res, next) => {
 	const error = new Error('Not found')
 	error.status = 404

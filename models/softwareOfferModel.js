@@ -21,6 +21,10 @@ const softwareOfferSchema = new mongoose.Schema({
 		type: Number,
 		default: null,
 	},
+	value: {
+		type: Number,
+		required: true,
+	},
 	note: {
 		type: String,
 		default: null,
